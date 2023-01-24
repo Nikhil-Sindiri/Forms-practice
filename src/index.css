@@ -78,6 +78,12 @@ button:active {
   background-color: #33059e;
   border-color: #33059e;
 }
+button:disabled {
+  background-color: #ccc;
+  color:#292929;
+  border-color: #ccc;
+  cursor: pointer;
+}
 
 .form-actions {
   text-align: right;

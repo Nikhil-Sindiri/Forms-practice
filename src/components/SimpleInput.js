@@ -1,40 +1,43 @@
-import { useState } from "react";
+import useInput from "../hooks/use-input";
 
 const SimpleInput = (props) => {
+  const { 
+    value: enteredName,
+    IsValid: enteredNameIsValid,
+    hasError:nameInputHasError,
+    valueChangeHandler:nameInputChangeHandler,
+    inputBlurHandler:nameInputBlurHandler,
+    reset:resetNameInput
+  }= useInput(value=> value.trim() !== '');
 
-  const [enteredName,setEnteredName] = useState('');
-  const [enteredNameTouched,setEnteredNameTouched] = useState(false) 
-
-  const enteredNameIsValid = enteredName.trim() !== '';
-  const nameInputIsInValid =!enteredNameIsValid && enteredNameTouched;
-  const nameInputChangeHandler = (event) => {
-    setEnteredName(event.target.value);
-  }
+  let formIsValid = false;
   
-  const nameInputBlurHandler=(event)=>{
-    setEnteredNameTouched(true);
+  if(enteredNameIsValid){
+    formIsValid = true;
   }
+
 
   const formSubmissionHandler =(event) => {
     event.preventDefault();
-    setEnteredNameTouched(true)
+    
     if(!enteredNameIsValid) {
       return;
     }
     console.log(enteredName)
+    resetNameInput();
     
   }
   
-  const nameInputClasses =nameInputIsInValid ? 'form-control invalid' : 'form-control'
+  const nameInputClasses =nameInputHasError ? 'form-control invalid' : 'form-control'
   return (
     <form onSubmit={formSubmissionHandler}>
       <div className={nameInputClasses}>
         <label htmlFor='name'>Your Name</label>
         <input type='text' id='name' onChange={nameInputChangeHandler} value={enteredName} onBlur={nameInputBlurHandler} />
-        {nameInputIsInValid && <p className="error-text">Shouldn't be empty</p>}
+        {nameInputHasError && <p className="error-text">Shouldn't be empty</p>}
       </div>
       <div className="form-actions">
-        <button>Submit</button>
+        <button disabled={!formIsValid}>Submit</button>
       </div>
     </form>
   );
